@@ -2,7 +2,7 @@ package jp.co.sample.domain;
 
 import java.util.Date;
 
-public class Employees {
+public class Employee {
 	/** 従業員ID */
 	private Integer id;
 	/** 従業員名 */
@@ -28,9 +28,9 @@ public class Employees {
 	/** 扶養人数 */
 	private Integer dependentsCount;
 
-	public Employees() {}
+	public Employee() {}
 
-	public Employees(Integer id, String name, String image, String gender, Date hireDate,
+	public Employee(Integer id, String name, String image, String gender, Date hireDate,
 			String mainAddress, String zipCode, String address, String telephone, Integer salary,
 			String characteristics, Integer dependentsCount) {
 		this.id = id;
