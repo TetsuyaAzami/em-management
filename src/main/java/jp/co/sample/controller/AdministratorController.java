@@ -61,6 +61,17 @@ public class AdministratorController {
 	}
 
 	/**
+	 * ログアウト
+	 *
+	 * @return ログイン画面
+	 */
+	@RequestMapping("logout")
+	public String logout() {
+		session.invalidate();
+		return "redirect:/";
+	}
+
+	/**
 	 * 従業員を登録
 	 *
 	 * @return 登録完了画面ヘフォワード
