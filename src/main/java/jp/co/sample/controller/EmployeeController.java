@@ -10,7 +10,7 @@ import jp.co.sample.service.EmployeeService;
 
 @Controller
 @RequestMapping("employee")
-public abstract class EmployeeController {
+public class EmployeeController {
 	@Autowired
 	private EmployeeService service;
 
@@ -20,6 +20,7 @@ public abstract class EmployeeController {
 	 * @param model リクエストスコープ
 	 * @return 従業員一覧ページ
 	 */
+
 	@RequestMapping("showList")
 	public String showList(Model model) {
 		List<Employee> employeeList = service.showList();
