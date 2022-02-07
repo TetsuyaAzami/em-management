@@ -1,9 +1,14 @@
 package jp.co.sample.form;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
+
 public class UpdateEmployeeForm {
 	/** 従業員ID */
 	private String id;
 	/** 扶養人数 */
+	@Pattern(regexp = "^[0-9]+$", message = "扶養人数は整数で入れてください")
+	@Pattern(regexp = "^[0-5]$", message = "扶養人数は5人までです")
 	private String dependentsCount;
 
 	public String getId() {

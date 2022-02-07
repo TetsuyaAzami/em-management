@@ -5,6 +5,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import jp.co.sample.domain.Administrator;
@@ -72,7 +74,7 @@ public class AdministratorController {
 	}
 
 	/**
-	 * 従業員を登録
+	 * 管理者を登録
 	 *
 	 * @return 登録完了画面ヘフォワード
 	 */
@@ -88,7 +90,10 @@ public class AdministratorController {
 	 * @return ログインフォームページ
 	 */
 	@RequestMapping("/insert")
-	public String insert(InsertAdministratorForm form) {
+	public String insert(@Validated InsertAdministratorForm form, BindingResult result) {
+		if (result.hasErrors()) {
+			return "administrator/insert";
+		}
 		Administrator administrator = new Administrator();
 		BeanUtils.copyProperties(form, administrator);
 		service.insert(administrator);
