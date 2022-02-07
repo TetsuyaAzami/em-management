@@ -13,11 +13,22 @@ public class AdministratorService {
 	@Autowired
 	private AdministratorRepository repository;
 
+	/**
+	 * 管理者を登録
+	 *
+	 * @param administrator 管理者
+	 */
 	public void insert(Administrator administrator) {
 		repository.insert(administrator);
 	}
 
-	/** 管理者をメールアドレス、パスワードをもとに1件取得 */
+	/**
+	 * 管理者をメールアドレス、パスワードをもとに1件取得
+	 *
+	 * @param mailAddress メールアドレス
+	 * @param password パスワード
+	 * @return 従業員情報
+	 */
 	public Administrator findByMailAddressAndPassword(String mailAddress, String password) {
 		return repository.findByMailAddressAndPassword(mailAddress, password);
 	}
