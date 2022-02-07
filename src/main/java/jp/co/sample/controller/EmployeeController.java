@@ -48,4 +48,19 @@ public class EmployeeController {
 		model.addAttribute("employee", employee);
 		return "employee/detail";
 	}
+
+	/**
+	 * 従業員情報を更新
+	 *
+	 * @param id ID
+	 * @param dependentsCount 扶養人数
+	 * @return 従業員一覧ページ
+	 */
+	@RequestMapping("update")
+	public String update(UpdateEmployeeForm updateEmployeeForm) {
+		Employee employee = service.showDetail(Integer.valueOf(updateEmployeeForm.getId()));
+		employee.setDependentsCount(Integer.valueOf(updateEmployeeForm.getDependentsCount()));
+		service.update(employee);
+		return "redirect:/employee/showList";
+	}
 }

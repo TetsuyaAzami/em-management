@@ -27,7 +27,7 @@ public class EmployeeRepository {
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT ");
 		sql.append(
-				"id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics ");
+				"id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count ");
 		sql.append("FROM employees ");
 		sql.append("ORDER BY hire_date;");
 
@@ -45,7 +45,7 @@ public class EmployeeRepository {
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT ");
 		sql.append(
-				"id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics ");
+				"id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count ");
 		sql.append("FROM employees ");
 		sql.append("WHERE id = :id;");
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
@@ -68,10 +68,11 @@ public class EmployeeRepository {
 		sql.append("gender = :gender,");
 		sql.append("hire_date = :hireDate,");
 		sql.append("mail_address = :mailAddress,");
-		sql.append("zip_code = :zipCode");
+		sql.append("zip_code = :zipCode,");
 		sql.append("telephone = :telephone,");
-		sql.append("salary = :salary");
-		sql.append("characteristics = :characteristics");
+		sql.append("salary = :salary,");
+		sql.append("characteristics = :characteristics,");
+		sql.append("dependents_count = :dependentsCount ");
 		sql.append("WHERE id = :id;");
 		SqlParameterSource param = new BeanPropertySqlParameterSource(employee);
 		template.update(sql.toString(), param);

@@ -14,7 +14,7 @@ public class Employee {
 	/** 従業員入社日 */
 	private java.util.Date hireDate;
 	/** 従業員メールアドレス */
-	private String mainAddress;
+	private String mailAddress;
 	/** 従業員郵便番号 */
 	private String zipCode;
 	/** 住所 */
@@ -31,14 +31,14 @@ public class Employee {
 	public Employee() {}
 
 	public Employee(Integer id, String name, String image, String gender, Date hireDate,
-			String mainAddress, String zipCode, String address, String telephone, Integer salary,
+			String mailAddress, String zipCode, String address, String telephone, Integer salary,
 			String characteristics, Integer dependentsCount) {
 		this.id = id;
 		this.name = name;
 		this.image = image;
 		this.gender = gender;
 		this.hireDate = hireDate;
-		this.mainAddress = mainAddress;
+		this.mailAddress = mailAddress;
 		this.zipCode = zipCode;
 		this.address = address;
 		this.telephone = telephone;
@@ -87,12 +87,13 @@ public class Employee {
 		this.hireDate = hireDate;
 	}
 
-	public String getMainAddress() {
-		return mainAddress;
+
+	public String getMailAddress() {
+		return mailAddress;
 	}
 
-	public void setMainAddress(String mainAddress) {
-		this.mainAddress = mainAddress;
+	public void setMailAddress(String mailAddress) {
+		this.mailAddress = mailAddress;
 	}
 
 	public String getZipCode() {
@@ -147,7 +148,7 @@ public class Employee {
 	public String toString() {
 		return "Employees [address=" + address + ", characteristics=" + characteristics
 				+ ", dependentsCount=" + dependentsCount + ", gender=" + gender + ", hireDate="
-				+ hireDate + ", id=" + id + ", image=" + image + ", mainAddress=" + mainAddress
+				+ hireDate + ", id=" + id + ", image=" + image + ", mainAddress=" + mailAddress
 				+ ", name=" + name + ", salary=" + salary + ", telephone=" + telephone
 				+ ", zipCode=" + zipCode + "]";
 	}
