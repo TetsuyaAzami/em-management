@@ -36,7 +36,7 @@ public class EmployeeController {
 
 	/**
 	 * 従業員詳細をDBから取ってきて従業員詳細ページにフォワード
-	 * 
+	 *
 	 * @param id ID
 	 * @param model リクエストスコープ
 	 * @return 従業員詳細ページ
