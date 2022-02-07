@@ -21,4 +21,14 @@ public class EmployeeService {
 	public List<Employee> showList() {
 		return repository.findAll();
 	}
+
+	/**
+	 * 従業員詳細を返す
+	 * 
+	 * @param id ID
+	 * @return 従業員情報
+	 */
+	public Employee showDetail(Integer id) {
+		return repository.load(id);
+	}
 }
