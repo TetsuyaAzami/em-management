@@ -27,7 +27,7 @@ public class AdministratorService {
 	 *
 	 * @param mailAddress メールアドレス
 	 * @param password パスワード
-	 * @return 従業員情報
+	 * @return 管理者情報
 	 */
 	public Administrator findByMailAddressAndPassword(String mailAddress, String password) {
 		return repository.findByMailAddressAndPassword(mailAddress, password);
