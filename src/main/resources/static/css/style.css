@@ -1,11 +1,18 @@
-@CHARSET "UTF-8";
+@charset "UTF-8";
 
+.hire_date {
+  display: flex;
+}
+.hire_date_form {
+  width: 100px;
+  margin: 0 4px;
+}
 .error-input {
-	border-color: #ff0000;
-	background-color: #ff0000;
-	margin-left: 5px;
+  border-color: #ff0000;
+  background-color: #ff0000;
+  margin-left: 5px;
 }
 
 .error-messages {
-	color: #ff0000;
+  color: #ff0000;
 }
