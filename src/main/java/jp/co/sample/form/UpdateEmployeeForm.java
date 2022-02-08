@@ -21,16 +21,24 @@ public class UpdateEmployeeForm {
 	@NotBlank(message = "性別は必須です")
 	private String gender;
 	/** 従業員メールアドレス */
+	@Pattern(regexp = "^[a-zA-Z0-9_.+-]+@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\\.)+[a-zA-Z]{2,}$",
+			message = "メールアドレスの形式が不正です")
 	private String mailAddress;
 	/** 従業員郵便番号 */
+	@Pattern(regexp = "[0-9]{3}-[0-9]{4}", message = "郵便番号の形式は〇〇〇-〇〇〇〇にしてください")
 	private String zipCode;
 	/** 住所 */
+	@NotBlank(message = "住所は必須です")
 	private String address;
 	/** 電話番号 */
+	@Pattern(regexp = "0\\d{1,4}-\\d{1,4}-\\d{4}", message = "電話番号の形式を満たしていません")
+	@Size(min = 1, max = 20, message = "電話番号は1〜20桁までです")
 	private String telephone;
 	/** 給料 */
+	@Pattern(regexp = "^[0-9]+$", message = "給料は数字で入れてください")
 	private String salary;
 	/** 特性 */
+	@Size(min = 0, max = 200, message = "特性は0文字〜200文字までです")
 	private String characteristics;
 	/** 扶養人数 */
 	@Pattern(regexp = "^[0-9]+$", message = "扶養人数は整数で入れてください")
