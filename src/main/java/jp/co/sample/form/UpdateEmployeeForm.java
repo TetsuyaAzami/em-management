@@ -1,6 +1,5 @@
 package jp.co.sample.form;
 
-import java.time.LocalDate;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -21,8 +20,6 @@ public class UpdateEmployeeForm {
 	@Pattern(regexp = "(男性|女性)", message = "性別は男性または女性です")
 	@NotBlank(message = "性別は必須です")
 	private String gender;
-	/** 従業員入社日 */
-	private LocalDate hireDate;
 	/** 従業員メールアドレス */
 	private String mailAddress;
 	/** 従業員郵便番号 */
@@ -70,15 +67,6 @@ public class UpdateEmployeeForm {
 
 	public void setGender(String gender) {
 		this.gender = gender;
-	}
-
-	public LocalDate getHireDate() {
-		return hireDate;
-	}
-
-	public void setHireDate(String year, String month, String date) {
-		this.hireDate = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month),
-				Integer.parseInt(date));
 	}
 
 	public String getMailAddress() {
@@ -140,10 +128,9 @@ public class UpdateEmployeeForm {
 	@Override
 	public String toString() {
 		return "UpdateEmployeeForm [address=" + address + ", characteristics=" + characteristics
-				+ ", dependentsCount=" + dependentsCount + ", gender=" + gender + ", hireDate="
-				+ hireDate + ", id=" + id + ", image=" + image + ", mailAddress=" + mailAddress
-				+ ", name=" + name + ", salary=" + salary + ", telephone=" + telephone
-				+ ", zipCode=" + zipCode + "]";
+				+ ", dependentsCount=" + dependentsCount + ", gender=" + gender + ", id=" + id
+				+ ", image=" + image + ", mailAddress=" + mailAddress + ", name=" + name
+				+ ", salary=" + salary + ", telephone=" + telephone + ", zipCode=" + zipCode + "]";
 	}
 
 }
