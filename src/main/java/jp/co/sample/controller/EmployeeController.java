@@ -46,7 +46,7 @@ public class EmployeeController {
 	 * @return 従業員詳細ページ
 	 */
 	@RequestMapping("showDetail")
-	public String showDetail(UpdateEmployeeForm form, String id, Model model) {
+	public String showDetail(UpdateEmployeeForm form, Integer id, Model model) {
 		Integer IntegerId = Integer.valueOf(id);
 		Employee employee = service.showDetail(IntegerId);
 
@@ -55,10 +55,8 @@ public class EmployeeController {
 		Integer month = employee.getHireDate().getMonthValue();
 		Integer date = employee.getHireDate().getDayOfMonth();
 
-		model.addAttribute("year", year);
-		model.addAttribute("month", month);
-		model.addAttribute("date", date);
-		model.addAttribute("employee", employee);
+		addEmployeeAttributeToResuestScope(model, employee, year, month, date);
+
 		BeanUtils.copyProperties(employee, form);
 		form.setSalary(employee.getSalary().toString());
 		return "employee/detail";
@@ -73,29 +71,20 @@ public class EmployeeController {
 	 */
 	@RequestMapping("update")
 	public String update(@Validated UpdateEmployeeForm form, BindingResult result, Model model,
-			String year, String month, String date) {
-		LocalDate hireDate = null;
+			Integer year, Integer month, Integer date) {
 		// 従業員をID検索で1件取得
 		Employee employee = service.showDetail(Integer.valueOf(form.getId()));
-		try {
-			// 入社日オブジェクトを作成
-			hireDate = generateHireDate(year, month, date);
-		} catch (Exception e) {
-			e.printStackTrace();
-			// ユーザ入力値の保持
-			model.addAttribute("year", Integer.parseInt(year));
-			model.addAttribute("month", Integer.parseInt(month));
-			model.addAttribute("date", Integer.parseInt(date));
-			model.addAttribute("isHireDateAbnormal", "true");
-			model.addAttribute("employee", employee);
-			model.addAttribute("hireDateError", "入社日に正しい値を入れてください");
+
+		LocalDate hireDate = null;
+
+		if (generateHireDate(model, employee, year, month, date) == null) {
+			// hireDateに異常な値が入っていたら詳細ページに戻す
 			return "employee/detail";
+		} else {
+			hireDate = generateHireDate(model, employee, year, month, date);
 		}
 		employee.setHireDate(hireDate);
-		model.addAttribute("year", hireDate.getYear());
-		model.addAttribute("month", hireDate.getMonthValue());
-		model.addAttribute("date", hireDate.getDayOfMonth());
-		model.addAttribute("employee", employee);
+		addEmployeeAttributeToResuestScope(model, employee, year, month, date);
 
 		if (result.hasErrors()) {
 			return "employee/detail";
@@ -105,13 +94,61 @@ public class EmployeeController {
 		return "redirect:/employee/showList";
 	}
 
-	public LocalDate generateHireDate(String year, String month, String date)
-			throws java.time.DateTimeException {
-		Integer yearInt = Integer.parseInt(year);
-		Integer monthInt = Integer.parseInt(month);
-		Integer dateInt = Integer.parseInt(date);
-
-		LocalDate hireDate = LocalDate.of(yearInt, monthInt, dateInt);
+	/**
+	 *
+	 * @param model リクエストスコープ
+	 * @param employee 従業員情報
+	 * @param year 入社年
+	 * @param month 入社月
+	 * @param date 入社日
+	 * @return hireDateの値が正常ならhireDateオブジェクト
+	 * @return hireDateの値が異常ならnull
+	 */
+	public LocalDate generateHireDate(Model model, Employee employee, Integer year, Integer month,
+			Integer date) {
+		LocalDate hireDate = null;
+		try {
+			// 入社日オブジェクトを作成
+			hireDate = LocalDate.of(year, month, date);
+		} catch (Exception e) {
+			e.printStackTrace();
+			// ユーザ入力値の保持
+			addEmployeeErrorAttributeToResuestScope(model, employee, year, month, date);
+			return null;
+		}
 		return hireDate;
+	}
+
+	/**
+	 * hireDateの入力値が正常だった場合にリクエストスコープにデータを格納する
+	 *
+	 * @param model リクエストスコープ
+	 * @param employee 従業員情報
+	 * @param year 入社年
+	 * @param month 入社月
+	 * @param date 入社日
+	 */
+	public void addEmployeeAttributeToResuestScope(Model model, Employee employee, Integer year,
+			Integer month, Integer date) {
+		model.addAttribute("year", year);
+		model.addAttribute("month", month);
+		model.addAttribute("date", date);
+		model.addAttribute("employee", employee);
+	}
+
+	/**
+	 * hireDateの入力値が異常だった場合にリクエストスコープにデータを格納する
+	 *
+	 * @param model リクエストスコープ
+	 * @param employee 従業員情報
+	 * @param year 入社年
+	 * @param month 入社月
+	 * @param date 入社日
+	 */
+	public void addEmployeeErrorAttributeToResuestScope(Model model, Employee employee,
+			Integer year, Integer month, Integer date) {
+		addEmployeeAttributeToResuestScope(model, employee, year, month, date);
+		model.addAttribute("isHireDateAbnormal", "true");
+		model.addAttribute("hireDateError", "入社日に正しい値を入れてください");
 	}
 }
