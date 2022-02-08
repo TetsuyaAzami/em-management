@@ -16,3 +16,11 @@
 .error-messages {
   color: #ff0000;
 }
+
+.form-td {
+  display: flex;
+  flex-direction: column;
+}
+.form-td-input {
+  width: 164px;
+}

@@ -1,6 +1,5 @@
 package jp.co.sample.form;
 
-import java.time.LocalDate;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -21,19 +20,25 @@ public class UpdateEmployeeForm {
 	@Pattern(regexp = "(男性|女性)", message = "性別は男性または女性です")
 	@NotBlank(message = "性別は必須です")
 	private String gender;
-	/** 従業員入社日 */
-	private LocalDate hireDate;
 	/** 従業員メールアドレス */
+	@Pattern(regexp = "^[a-zA-Z0-9_.+-]+@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\\.)+[a-zA-Z]{2,}$",
+			message = "メールアドレスの形式が不正です")
 	private String mailAddress;
 	/** 従業員郵便番号 */
+	@Pattern(regexp = "[0-9]{3}-[0-9]{4}", message = "郵便番号の形式は〇〇〇-〇〇〇〇にしてください")
 	private String zipCode;
 	/** 住所 */
+	@NotBlank(message = "住所は必須です")
 	private String address;
 	/** 電話番号 */
+	@Pattern(regexp = "0\\d{1,4}-\\d{1,4}-\\d{4}", message = "電話番号の形式を満たしていません")
+	@Size(min = 1, max = 20, message = "電話番号は1〜20桁までです")
 	private String telephone;
 	/** 給料 */
+	@Pattern(regexp = "^[0-9]+$", message = "給料は数字で入れてください")
 	private String salary;
 	/** 特性 */
+	@Size(min = 0, max = 200, message = "特性は0文字〜200文字までです")
 	private String characteristics;
 	/** 扶養人数 */
 	@Pattern(regexp = "^[0-9]+$", message = "扶養人数は整数で入れてください")
@@ -70,15 +75,6 @@ public class UpdateEmployeeForm {
 
 	public void setGender(String gender) {
 		this.gender = gender;
-	}
-
-	public LocalDate getHireDate() {
-		return hireDate;
-	}
-
-	public void setHireDate(String year, String month, String date) {
-		this.hireDate = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month),
-				Integer.parseInt(date));
 	}
 
 	public String getMailAddress() {
@@ -140,10 +136,9 @@ public class UpdateEmployeeForm {
 	@Override
 	public String toString() {
 		return "UpdateEmployeeForm [address=" + address + ", characteristics=" + characteristics
-				+ ", dependentsCount=" + dependentsCount + ", gender=" + gender + ", hireDate="
-				+ hireDate + ", id=" + id + ", image=" + image + ", mailAddress=" + mailAddress
-				+ ", name=" + name + ", salary=" + salary + ", telephone=" + telephone
-				+ ", zipCode=" + zipCode + "]";
+				+ ", dependentsCount=" + dependentsCount + ", gender=" + gender + ", id=" + id
+				+ ", image=" + image + ", mailAddress=" + mailAddress + ", name=" + name
+				+ ", salary=" + salary + ", telephone=" + telephone + ", zipCode=" + zipCode + "]";
 	}
 
 }

@@ -61,6 +61,12 @@
                   <tr>
                     <th nowrap>従業員名</th>
                     <td>
+                      <label
+                      th:errors="*{name}"
+                      class="error-messages"
+                      for="name"
+                      ></label>
+                      <div class="hire_date">
                       <input
                         type="text"
                         th:field="*{name}"
@@ -79,12 +85,18 @@
                   </tr>
                   <tr>
                     <th nowrap>性別</th>
-                    <td>
-                      <input type="radio" id="male" th:field="*{gender}" th:value="男性"></input>
-                      <label for="male">男性</label>
-                      <input type="radio" id="female" th:field="*{gender}" th:value="女性">
-                      <label for="female">女性</label>
-                      <p th:errors="*{gender}"></p>
+                    <td class="d-flex flex-row-reverse">
+                      <label
+                      th:errors="*{gender}"
+                      class="error-messages"
+                      for="male"
+                      ></label>
+                      <div class="gender-radio">
+                        <input type="radio" id="male" th:field="*{gender}" th:value="男性"></input>
+                        <label for="male">男性</label>
+                        <input type="radio" id="female" th:field="*{gender}" th:value="女性">
+                        <label for="female">女性</label>
+                      </div>
                     </td>
                   </tr>
                   <tr>
@@ -97,45 +109,75 @@
                       ></label>
                       <div class="hire_date">
 
-                        <input type="text" id="year" name="year" class="hire_date_form" th:value="${year}"><label for="year">年</label>
-                        <input type="text" id="month" name="month" class="hire_date_form" th:value="${month}"><label for="month">月</label>
-                        <input type="text" id="date" name="date" class="hire_date_form" th:value="${date}"><label for="date">日</label>
+                        <input type="number" id="year" name="year" class="hire_date_form" th:value="${year}"><label for="year">年</label>
+                        <input type="number" id="month" name="month" class="hire_date_form" th:value="${month}"><label for="month">月</label>
+                        <input type="number" id="date" name="date" class="hire_date_form" th:value="${date}"><label for="date">日</label>
                       </div>
                     </td>
                   </tr>
                   <tr>
                     <th nowrap>メールアドレス</th>
-                    <td>
-                      <input th:field="*{mailAddress}"></input>
+                    <td class="form-td">
+                      <label
+                      th:errors="*{mailAddress}"
+                      class="error-messages"
+                      for="mailAddress"
+                      ></label>
+                      <input class="form-td-input" th:field="*{mailAddress}"></input>
                     </td>
                   </tr>
                   <tr>
                     <th nowrap>郵便番号</th>
-                    <td>
-                      <input th:field="*{zipCode}"></input>
+                    <td class="form-td">
+                      <label
+                      th:errors="*{zipCode}"
+                      class="error-messages"
+                      for="zipCode"
+                      ></label>
+                      <input class="form-td-input" th:field="*{zipCode}"></input>
                     </td>
                   </tr>
                   <tr>
                     <th nowrap>住所</th>
-                    <td>
-                      <input th:field="*{address}"></input>
+                    <td class="form-td">
+                      <label
+                      th:errors="*{address}"
+                      class="error-messages"
+                      for="address"
+                      ></label>
+                      <input class="form-td-input" th:field="*{address}"></input>
                     </td>
                   </tr>
                   <tr>
                     <th nowrap>電話番号</th>
-                    <td>
-                      <input th:field="*{telephone}"></input>
+                    <td class="form-td">
+                      <label
+                      th:errors="*{telephone}"
+                      class="error-messages"
+                      for="telephone"
+                      ></label>
+                      <input class="form-td-input" th:field="*{telephone}"></input>
                     </td>
                   </tr>
                   <tr>
                     <th nowrap>給料</th>
-                    <td>
-                      <input th:field="*{salary}"></input>
+                    <td class="form-td">
+                      <label
+                      th:errors="*{salary}"
+                      class="error-messages"
+                      for="salary"
+                      ></label>
+                      <input class="form-td-input" th:field="*{salary}"></input>
                     </td>
                   </tr>
                   <tr>
                     <th nowrap>特性</th>
-                    <td>
+                    <td class="form-td">
+                      <label
+                      th:errors="*{characteristics}"
+                      class="error-messages"
+                      for="characteristics"
+                      ></label>
                       <textarea rows="5" cols="60" th:field="*{characteristics}"
                         >明るく素直な性格です。リーダーシップを発揮します。新卒社員研修の時はグループ開発の時にリーダーを買ってでました。積極性も人間性も抜群です。周りに対する不満も聞いたことがありません。</textarea>
                     </td>
