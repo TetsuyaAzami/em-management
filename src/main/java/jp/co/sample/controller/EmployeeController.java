@@ -1,6 +1,8 @@
 package jp.co.sample.controller;
 
+import java.time.LocalDate;
 import java.util.List;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,10 +46,21 @@ public class EmployeeController {
 	 * @return 従業員詳細ページ
 	 */
 	@RequestMapping("showDetail")
-	public String showDetail(String id, Model model) {
+	public String showDetail(UpdateEmployeeForm form, String id, Model model) {
 		Integer IntegerId = Integer.valueOf(id);
 		Employee employee = service.showDetail(IntegerId);
+
+		// 入社日を年、月、日別個でViewに渡す
+		Integer year = employee.getHireDate().getYear();
+		Integer month = employee.getHireDate().getMonthValue();
+		Integer date = employee.getHireDate().getDayOfMonth();
+
+		model.addAttribute("year", year);
+		model.addAttribute("month", month);
+		model.addAttribute("date", date);
 		model.addAttribute("employee", employee);
+		BeanUtils.copyProperties(employee, form);
+		form.setSalary(employee.getSalary().toString());
 		return "employee/detail";
 	}
 
@@ -59,16 +72,46 @@ public class EmployeeController {
 	 * @return 従業員一覧ページ
 	 */
 	@RequestMapping("update")
-	public String update(@Validated UpdateEmployeeForm updateEmployeeForm, BindingResult result,
-			Model model) {
-		if (result.hasErrors()) {
-			Employee employee = service.showDetail(Integer.valueOf(updateEmployeeForm.getId()));
+	public String update(@Validated UpdateEmployeeForm form, BindingResult result, Model model,
+			String year, String month, String date) {
+		LocalDate hireDate = null;
+		// 従業員をID検索で1件取得
+		Employee employee = service.showDetail(Integer.valueOf(form.getId()));
+		try {
+			// 入社日オブジェクトを作成
+			hireDate = generateHireDate(year, month, date);
+		} catch (Exception e) {
+			e.printStackTrace();
+			// ユーザ入力値の保持
+			model.addAttribute("year", Integer.parseInt(year));
+			model.addAttribute("month", Integer.parseInt(month));
+			model.addAttribute("date", Integer.parseInt(date));
+			model.addAttribute("isHireDateAbnormal", "true");
 			model.addAttribute("employee", employee);
+			model.addAttribute("hireDateError", "入社日に正しい値を入れてください");
 			return "employee/detail";
 		}
-		Employee employee = service.showDetail(Integer.valueOf(updateEmployeeForm.getId()));
-		employee.setDependentsCount(Integer.valueOf(updateEmployeeForm.getDependentsCount()));
+		employee.setHireDate(hireDate);
+		model.addAttribute("year", hireDate.getYear());
+		model.addAttribute("month", hireDate.getMonthValue());
+		model.addAttribute("date", hireDate.getDayOfMonth());
+		model.addAttribute("employee", employee);
+
+		if (result.hasErrors()) {
+			return "employee/detail";
+		}
+		employee.setDependentsCount(Integer.valueOf(form.getDependentsCount()));
 		service.update(employee);
 		return "redirect:/employee/showList";
+	}
+
+	public LocalDate generateHireDate(String year, String month, String date)
+			throws java.time.DateTimeException {
+		Integer yearInt = Integer.parseInt(year);
+		Integer monthInt = Integer.parseInt(month);
+		Integer dateInt = Integer.parseInt(date);
+
+		LocalDate hireDate = LocalDate.of(yearInt, monthInt, dateInt);
+		return hireDate;
 	}
 }

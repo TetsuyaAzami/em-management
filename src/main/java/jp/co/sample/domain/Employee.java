@@ -1,6 +1,6 @@
 package jp.co.sample.domain;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Employee {
 	/** 従業員ID */
@@ -12,7 +12,7 @@ public class Employee {
 	/** 従業員性別 */
 	private String gender;
 	/** 従業員入社日 */
-	private java.util.Date hireDate;
+	private LocalDate hireDate;
 	/** 従業員メールアドレス */
 	private String mailAddress;
 	/** 従業員郵便番号 */
@@ -30,7 +30,7 @@ public class Employee {
 
 	public Employee() {}
 
-	public Employee(Integer id, String name, String image, String gender, Date hireDate,
+	public Employee(Integer id, String name, String image, String gender, LocalDate hireDate,
 			String mailAddress, String zipCode, String address, String telephone, Integer salary,
 			String characteristics, Integer dependentsCount) {
 		this.id = id;
@@ -79,14 +79,13 @@ public class Employee {
 		this.gender = gender;
 	}
 
-	public java.util.Date getHireDate() {
+	public LocalDate getHireDate() {
 		return hireDate;
 	}
 
-	public void setHireDate(java.util.Date hireDate) {
+	public void setHireDate(LocalDate hireDate) {
 		this.hireDate = hireDate;
 	}
-
 
 	public String getMailAddress() {
 		return mailAddress;

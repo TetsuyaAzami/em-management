@@ -19,62 +19,11 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
   </head>
   <body>
     <div class="container">
-      <nav class="navbar navbar-default">
-        <div class="container-fluid">
-          <!-- Brand and toggle get grouped for better mobile display -->
-          <div class="navbar-header">
-            <button
-              type="button"
-              class="navbar-toggle collapsed"
-              data-toggle="collapse"
-              data-target="#bs-example-navbar-collapse-1"
-              aria-expanded="false"
-            >
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span> <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a
-              class="navbar-brand"
-              href="list.html"
-              th:href="@{/employee/showList}"
-            >
-              <!-- 企業ロゴ -->
-              <img
-                src="../../static/img/header_logo_small.png"
-                th:src="@{/img/header_logo_small.png}"
-              />
-            </a>
-          </div>
-
-          <!-- Collect the nav links, forms, and other content for toggling -->
-          <div
-            class="collapse navbar-collapse"
-            id="bs-example-navbar-collapse-1"
-          >
-            <ul class="nav navbar-nav">
-              <li class="active"><a href="list.html">従業員管理</a></li>
-            </ul>
-            <p class="navbar-text navbar-right">
-              <span th:text="${session.administratorName + 'さん'}"
-                >山田さん</span
-              >こんにちは！ &nbsp;&nbsp;&nbsp;
-              <a
-                href="../administrator/login.html"
-                th:href="@{/logout}"
-                class="navbar-link"
-                >ログアウト</a
-              >
-            </p>
-          </div>
-          <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container-fluid -->
-      </nav>
-
+      <span th:insert="fragment_part::frag_header"></span>
       <!-- パンくずリスト -->
       <ol class="breadcrumb">
         <li>
@@ -112,7 +61,11 @@
                   <tr>
                     <th nowrap>従業員名</th>
                     <td>
-                      <span th:text="${employee.name}">山田花子</span>
+                      <input
+                        type="text"
+                        th:field="*{name}"
+                        t:th:text="*{name}"
+                      />
                     </td>
                   </tr>
                   <tr>
@@ -127,55 +80,64 @@
                   <tr>
                     <th nowrap>性別</th>
                     <td>
-                      <span th:text="${employee.gender}">女性</span>
+                      <input type="radio" id="male" th:field="*{gender}" th:value="男性"></input>
+                      <label for="male">男性</label>
+                      <input type="radio" id="female" th:field="*{gender}" th:value="女性">
+                      <label for="female">女性</label>
+                      <p th:errors="*{gender}"></p>
                     </td>
                   </tr>
                   <tr>
-                    <th nowrap>入社日</th>
+                    <th >入社日</th>
                     <td>
-                      <span th:text="${employee.hireDate}">2012/11/29</span>
+                      <label
+                      th:if="${isHireDateAbnormal}" th:text="${hireDateError}"
+                      class="error-messages"
+                      for="year"
+                      ></label>
+                      <div class="hire_date">
+
+                        <input type="text" id="year" name="year" class="hire_date_form" th:value="${year}"><label for="year">年</label>
+                        <input type="text" id="month" name="month" class="hire_date_form" th:value="${month}"><label for="month">月</label>
+                        <input type="text" id="date" name="date" class="hire_date_form" th:value="${date}"><label for="date">日</label>
+                      </div>
                     </td>
                   </tr>
                   <tr>
                     <th nowrap>メールアドレス</th>
                     <td>
-                      <span th:text="${employee.mailAddress}"
-                        >yamada@sample.com</span
-                      >
+                      <input th:field="*{mailAddress}"></input>
                     </td>
                   </tr>
                   <tr>
                     <th nowrap>郵便番号</th>
                     <td>
-                      <span th:text="${employee.zipCode}">111-1111</span>
+                      <input th:field="*{zipCode}"></input>
                     </td>
                   </tr>
                   <tr>
                     <th nowrap>住所</th>
                     <td>
-                      <span th:text="${employee.address}"
-                        >東京都新宿区1-1-1</span
-                      >
+                      <input th:field="*{address}"></input>
                     </td>
                   </tr>
                   <tr>
                     <th nowrap>電話番号</th>
                     <td>
-                      <span th:text="${employee.telephone}">090-0000-0000</span>
+                      <input th:field="*{telephone}"></input>
                     </td>
                   </tr>
                   <tr>
                     <th nowrap>給料</th>
                     <td>
-                      <span th:text="${employee.salary}">400000円</span>
+                      <input th:field="*{salary}"></input>
                     </td>
                   </tr>
                   <tr>
                     <th nowrap>特性</th>
                     <td>
-                      <span th:text="${employee.characteristics}"
-                        >明るく素直な性格です。リーダーシップを発揮します。新卒社員研修の時はグループ開発の時にリーダーを買ってでました。積極性も人間性も抜群です。周りに対する不満も聞いたことがありません。</span
-                      >
+                      <textarea rows="5" cols="60" th:field="*{characteristics}"
+                        >明るく素直な性格です。リーダーシップを発揮します。新卒社員研修の時はグループ開発の時にリーダーを買ってでました。積極性も人間性も抜群です。周りに対する不満も聞いたことがありません。</textarea>
                     </td>
                   </tr>
                   <tr>
@@ -184,6 +146,7 @@
                       <label
                         th:errors="*{dependentsCount}"
                         class="error-messages"
+                        for="dependentsCount"
                       >
                         扶養人数を入力してください
                       </label>
@@ -192,17 +155,13 @@
                         style="color: red"
                         for="dependentsCount"
                       ></label>
-                      <input
-                        type="hidden"
-                        name="id"
-                        th:value="${employee.id}"
-                      />
+                      <input type="hidden" name="id" th:value="*{id}" />
                       <input
                         type="text"
                         name="dependentsCount"
                         id="dependentsCount"
                         class="form-control"
-                        th:value="${employee.dependentsCount}"
+                        th:value="*{dependentsCount}"
                       />
                     </td>
                   </tr>
