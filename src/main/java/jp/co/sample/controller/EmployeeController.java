@@ -51,7 +51,7 @@ public class EmployeeController {
 	 * @return 従業員一覧ページ
 	 */
 	@RequestMapping("showList")
-	public String showList(Model model, String page) {
+	public String showList(Model model, String page, @ModelAttribute("message") String message) {
 		// ログインしてなかったらログイン画面に返す
 		if (session.getAttribute("administratorName") == null) {
 			model.addAttribute("message", "ログインが必要です");
@@ -96,6 +96,7 @@ public class EmployeeController {
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("startPage", startPage);
 		model.addAttribute("endPage", endPage);
+		// model.addAttribute("message", message);
 		return "employee/list";
 	}
 
@@ -166,7 +167,7 @@ public class EmployeeController {
 		service.update(employee);
 
 		redirectAttributes.addAttribute("page", Integer.parseInt(page));
-		redirectAttributes.addAttribute("message", "登録完了しました！");
+		redirectAttributes.addFlashAttribute("message", "登録完了しました");
 		return "redirect:/employee/showList";
 	}
 

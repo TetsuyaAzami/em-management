@@ -1,5 +1,13 @@
 @charset "UTF-8";
-
+.table-height-maintainer {
+  margin-bottom: 20px;
+  min-height: 407px;
+}
+.register-ok-message {
+  margin-bottom: 24px;
+  text-align: center;
+  color: green;
+}
 .hire_date {
   display: flex;
 }
