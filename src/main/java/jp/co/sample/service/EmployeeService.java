@@ -1,5 +1,6 @@
 package jp.co.sample.service;
 
+import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,10 @@ public class EmployeeService {
 		return repository.findAll();
 	}
 
+	public List<Employee> showListWithLimit(HashMap<String, Integer> search) {
+		return repository.findAllWithLimit(search);
+	}
+
 	/**
 	 * 従業員詳細を返す
 	 *
@@ -34,10 +39,14 @@ public class EmployeeService {
 
 	/**
 	 * 従業員情報を更新
-	 * 
+	 *
 	 * @param employee 従業員情報
 	 */
 	public void update(Employee employee) {
 		repository.update(employee);
+	}
+
+	public int countEmployee() {
+		return repository.countEmployee();
 	}
 }

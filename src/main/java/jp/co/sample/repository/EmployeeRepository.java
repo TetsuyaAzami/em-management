@@ -1,5 +1,6 @@
 package jp.co.sample.repository;
 
+import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -32,6 +33,22 @@ public class EmployeeRepository {
 		sql.append("ORDER BY hire_date;");
 
 		List<Employee> employeeList = template.query(sql.toString(), EMPLOYEE_ROW_MAPPER);
+		return employeeList;
+	}
+
+	public List<Employee> findAllWithLimit(HashMap<String, Integer> search) {
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT ");
+		sql.append(
+				"id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count ");
+		sql.append("FROM employees ");
+		sql.append("ORDER BY hire_date LIMIT :limit OFFSET :offset;");
+
+		int limit = search.get("limit");
+		int page = search.get("currentPage");
+		SqlParameterSource params = new MapSqlParameterSource().addValue("limit", limit)
+				.addValue("offset", limit * (page - 1));
+		List<Employee> employeeList = template.query(sql.toString(), params, EMPLOYEE_ROW_MAPPER);
 		return employeeList;
 	}
 
@@ -77,5 +94,11 @@ public class EmployeeRepository {
 		SqlParameterSource param = new BeanPropertySqlParameterSource(employee);
 		template.update(sql.toString(), param);
 
+	}
+
+	public int countEmployee() {
+		String sql = "SELECT count(id) FROM employees;";
+		SqlParameterSource params = new MapSqlParameterSource();
+		return template.queryForObject(sql, params, Integer.class);
 	}
 }
