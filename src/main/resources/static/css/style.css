@@ -24,3 +24,7 @@
 .form-td-input {
   width: 164px;
 }
+.pagination-parent {
+  display: flex;
+  justify-content: center;
+}

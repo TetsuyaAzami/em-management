@@ -27,7 +27,7 @@
       <!-- パンくずリスト -->
       <ol class="breadcrumb">
         <li>
-          <a href="list.html" th:href="@{/employee/showList}">従業員リスト</a>
+          <a href="list.html" th:href="@{/employee/showList?page=1}">従業員リスト</a>
         </li>
         <li class="active">従業員詳細</li>
       </ol>
@@ -208,11 +208,10 @@
                     </td>
                   </tr>
                 </table>
+                <input type="hidden" name="page" value="1">
                 <button type="submit" class="btn btn-primary">更新</button>
               </fieldset>
             </form>
-
-            <!-- ここから下を編集する必要はありません -->
           </div>
         </div>
       </div>
