@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jp.co.sample.domain.Employee;
+import jp.co.sample.form.LoginForm;
 import jp.co.sample.form.UpdateEmployeeForm;
 import jp.co.sample.service.EmployeeService;
 
@@ -27,11 +29,19 @@ public class EmployeeController {
 	private int showPageSize = 3;
 
 	@Autowired
+	private HttpSession session;
+
+	@Autowired
 	private EmployeeService service;
 
 	@ModelAttribute
 	public UpdateEmployeeForm setUpUpdateEmployeeForm() {
 		return new UpdateEmployeeForm();
+	}
+
+	@ModelAttribute
+	public LoginForm setUpLoginForm() {
+		return new LoginForm();
 	}
 
 	/**
@@ -42,6 +52,12 @@ public class EmployeeController {
 	 */
 	@RequestMapping("showList")
 	public String showList(Model model, String page) {
+		// ログインしてなかったらログイン画面に返す
+		if (session.getAttribute("administratorName") == null) {
+			model.addAttribute("message", "ログインが必要です");
+			return "administrator/login";
+		}
+
 		Integer currentPage = Integer.parseInt(page);
 
 		// 初期表示ではパラメータを取得できないので、1ページに設定
@@ -92,10 +108,14 @@ public class EmployeeController {
 	 */
 	@RequestMapping("showDetail")
 	public String showDetail(UpdateEmployeeForm form, Integer id, Model model) {
+		// ログインしてなかったらログイン画面に返す
+		if (session.getAttribute("administratorName") == null) {
+			model.addAttribute("message", "ログインが必要です");
+			return "administrator/login";
+		}
 		Integer IntegerId = Integer.valueOf(id);
 		Employee employee = service.showDetail(IntegerId);
 
-		// 入社日を年、月、日別個でViewに渡す
 		Integer year = employee.getHireDate().getYear();
 		Integer month = employee.getHireDate().getMonthValue();
 		Integer date = employee.getHireDate().getDayOfMonth();
@@ -119,29 +139,38 @@ public class EmployeeController {
 	public String update(@Validated UpdateEmployeeForm form, BindingResult result,
 			RedirectAttributes redirectAttributes, Model model, Integer year, Integer month,
 			Integer date, String page) {
+		// ログインしてなかったらログイン画面に返す
+		if (session.getAttribute("administratorName") == null) {
+			model.addAttribute("message", "ログインが必要です");
+			return "administrator/login";
+		}
 		// 従業員をID検索で1件取得
 		Employee employee = service.showDetail(Integer.valueOf(form.getId()));
 
-		LocalDate hireDate = null;
+		LocalDate hireDate = generateHireDate(model, employee, year, month, date);
 
-		if (generateHireDate(model, employee, year, month, date) == null) {
+		addEmployeeAttributeToResuestScope(model, employee, year, month, date);
+		if (result.hasErrors()) {
+			model.addAttribute(employee);
+			return "employee/detail";
+		}
+		if (hireDate == null) {
 			// hireDateに異常な値が入っていたら詳細ページに戻す
 			return "employee/detail";
-		} else {
-			hireDate = generateHireDate(model, employee, year, month, date);
 		}
-		employee.setHireDate(hireDate);
-		addEmployeeAttributeToResuestScope(model, employee, year, month, date);
 
-		if (result.hasErrors()) {
-			return "employee/detail";
-		}
+		// UpdateEmployeeFormからEmployeeエンティティにデータを詰め直してDBに登録
+		BeanUtils.copyProperties(form, employee);
+		employee.setHireDate(hireDate);
 		employee.setDependentsCount(Integer.parseInt(form.getDependentsCount()));
 		service.update(employee);
+
 		redirectAttributes.addAttribute("page", Integer.parseInt(page));
 		redirectAttributes.addAttribute("message", "登録完了しました！");
 		return "redirect:/employee/showList";
 	}
+
+
 
 	/**
 	 *
@@ -160,7 +189,6 @@ public class EmployeeController {
 			// 入社日オブジェクトを作成
 			hireDate = LocalDate.of(year, month, date);
 		} catch (Exception e) {
-			e.printStackTrace();
 			// ユーザ入力値の保持
 			addEmployeeErrorAttributeToResuestScope(model, employee, year, month, date);
 			return null;

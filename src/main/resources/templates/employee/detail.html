@@ -77,6 +77,7 @@
                   <tr>
                     <th nowrap>写真</th>
                     <td>
+                      <input type="hidden" th:field="*{image}" th:value="*{image}" >
                       <img
                         src="../../static/img/e2.png"
                         th:src="${'/img/' + employee.image}"
