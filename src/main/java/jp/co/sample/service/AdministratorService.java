@@ -31,4 +31,8 @@ public class AdministratorService {
 	public Administrator findByMailAddressAndPassword(String mailAddress, String password) {
 		return repository.findByMailAddressAndPassword(mailAddress, password);
 	}
+
+	public Boolean findByMailAddress(String email) {
+		return repository.findByMailAddress(email);
+	}
 }

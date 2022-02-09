@@ -121,7 +121,7 @@ public class EmployeeController {
 		Integer month = employee.getHireDate().getMonthValue();
 		Integer date = employee.getHireDate().getDayOfMonth();
 
-		addEmployeeAttributeToResuestScope(model, employee, year, month, date);
+		addEmployeeAttributeToRequestScope(model, employee, year, month, date);
 
 		BeanUtils.copyProperties(employee, form);
 		form.setSalary(employee.getSalary().toString());
@@ -150,12 +150,11 @@ public class EmployeeController {
 
 		LocalDate hireDate = generateHireDate(model, employee, year, month, date);
 
-		addEmployeeAttributeToResuestScope(model, employee, year, month, date);
+		addEmployeeAttributeToRequestScope(model, employee, year, month, date);
 		if (result.hasErrors()) {
 			model.addAttribute(employee);
-			return "employee/detail";
 		}
-		if (hireDate == null) {
+		if (result.hasErrors() || hireDate == null) {
 			// hireDateに異常な値が入っていたら詳細ページに戻す
 			return "employee/detail";
 		}
@@ -191,7 +190,7 @@ public class EmployeeController {
 			hireDate = LocalDate.of(year, month, date);
 		} catch (Exception e) {
 			// ユーザ入力値の保持
-			addEmployeeErrorAttributeToResuestScope(model, employee, year, month, date);
+			addEmployeeErrorAttributeToRequestScope(model, employee, year, month, date);
 			return null;
 		}
 		return hireDate;
@@ -206,7 +205,7 @@ public class EmployeeController {
 	 * @param month 入社月
 	 * @param date 入社日
 	 */
-	public void addEmployeeAttributeToResuestScope(Model model, Employee employee, Integer year,
+	public void addEmployeeAttributeToRequestScope(Model model, Employee employee, Integer year,
 			Integer month, Integer date) {
 		model.addAttribute("year", year);
 		model.addAttribute("month", month);
@@ -223,9 +222,9 @@ public class EmployeeController {
 	 * @param month 入社月
 	 * @param date 入社日
 	 */
-	public void addEmployeeErrorAttributeToResuestScope(Model model, Employee employee,
+	public void addEmployeeErrorAttributeToRequestScope(Model model, Employee employee,
 			Integer year, Integer month, Integer date) {
-		addEmployeeAttributeToResuestScope(model, employee, year, month, date);
+		addEmployeeAttributeToRequestScope(model, employee, year, month, date);
 		model.addAttribute("isHireDateAbnormal", "true");
 		model.addAttribute("hireDateError", "入社日に正しい値を入れてください");
 	}
