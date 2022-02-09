@@ -90,8 +90,14 @@ public class AdministratorController {
 	 * @return ログインフォームページ
 	 */
 	@RequestMapping("/insert")
-	public String insert(@Validated InsertAdministratorForm form, BindingResult result) {
-		if (result.hasErrors()) {
+	public String insert(@Validated InsertAdministratorForm form, BindingResult result,
+			Model model) {
+		Boolean isEmailExists = service.findByMailAddress(form.getMailAddress());
+
+		if (isEmailExists) {
+			model.addAttribute("emailExists", "入力されたメールアドレスは既に存在しています。");
+		}
+		if (result.hasErrors() || isEmailExists) {
 			return "administrator/insert";
 		}
 		Administrator administrator = new Administrator();

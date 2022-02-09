@@ -43,4 +43,21 @@ public class AdministratorRepository {
 		}
 	}
 
+	/** 管理者をメールアドレスで1件取得 */
+	public Boolean findByMailAddress(String email) {
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT mail_address ");
+		sql.append("FROM administrators ");
+		sql.append("WHERE mail_address = :email LIMIT(1);");
+
+		SqlParameterSource params = new MapSqlParameterSource().addValue("email", email);
+		List<Administrator> admin =
+				template.query(sql.toString(), params, ADMINISTRATOR_ROW_MAPPER);
+		if (admin.size() == 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 }
