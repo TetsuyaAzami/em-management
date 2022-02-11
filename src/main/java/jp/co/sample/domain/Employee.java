@@ -1,6 +1,7 @@
 package jp.co.sample.domain;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Employee {
 	/** 従業員ID */
@@ -28,11 +29,12 @@ public class Employee {
 	/** 扶養人数 */
 	private Integer dependentsCount;
 
-	public Employee() {}
+	public Employee() {
+	}
 
-	public Employee(Integer id, String name, String image, String gender, LocalDate hireDate,
-			String mailAddress, String zipCode, String address, String telephone, Integer salary,
-			String characteristics, Integer dependentsCount) {
+	public Employee(Integer id, String name, String image, String gender, LocalDate hireDate, String mailAddress,
+			String zipCode, String address, String telephone, Integer salary, String characteristics,
+			Integer dependentsCount) {
 		this.id = id;
 		this.name = name;
 		this.image = image;
@@ -144,14 +146,34 @@ public class Employee {
 	}
 
 	@Override
-	public String toString() {
-		return "Employees [address=" + address + ", characteristics=" + characteristics
-				+ ", dependentsCount=" + dependentsCount + ", gender=" + gender + ", hireDate="
-				+ hireDate + ", id=" + id + ", image=" + image + ", mainAddress=" + mailAddress
-				+ ", name=" + name + ", salary=" + salary + ", telephone=" + telephone
-				+ ", zipCode=" + zipCode + "]";
+	public int hashCode() {
+		return Objects.hash(address, characteristics, dependentsCount, gender, hireDate, id, image, mailAddress, name,
+				salary, telephone, zipCode);
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Employee other = (Employee) obj;
+		return Objects.equals(address, other.address) && Objects.equals(characteristics, other.characteristics)
+				&& Objects.equals(dependentsCount, other.dependentsCount) && Objects.equals(gender, other.gender)
+				&& Objects.equals(hireDate, other.hireDate) && Objects.equals(id, other.id)
+				&& Objects.equals(image, other.image) && Objects.equals(mailAddress, other.mailAddress)
+				&& Objects.equals(name, other.name) && Objects.equals(salary, other.salary)
+				&& Objects.equals(telephone, other.telephone) && Objects.equals(zipCode, other.zipCode);
+	}
 
+	@Override
+	public String toString() {
+		return "Employees [address=" + address + ", characteristics=" + characteristics + ", dependentsCount="
+				+ dependentsCount + ", gender=" + gender + ", hireDate=" + hireDate + ", id=" + id + ", image=" + image
+				+ ", mainAddress=" + mailAddress + ", name=" + name + ", salary=" + salary + ", telephone=" + telephone
+				+ ", zipCode=" + zipCode + "]";
+	}
 
 }
