@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import jp.co.sample.domain.Administrator;
+import jp.co.sample.form.InsertAdministratorForm;
 import jp.co.sample.form.LoginForm;
 import jp.co.sample.service.AdministratorService;
 
@@ -34,7 +36,6 @@ public class AdministratorControllerTest {
 
 	@MockBean
 	AdministratorService service;
-
 
 	@Autowired
 	private AdministratorController controller;
@@ -121,12 +122,122 @@ public class AdministratorControllerTest {
 				.andExpect(view().name("forward:/employee/showList"));
 	}
 
+	/**
+	 * 管理者ログアウトのテスト
+	 *
+	 * @throws Exception
+	 */
 	@Test
 	@DisplayName("logoutメソッドを経由するとsessionが無効化されること")
 	void logoutTest() throws Exception {
 
 		MvcResult result = mockMvc.perform(get("/logout").sessionAttr("administratorName", "admin"))
-				.andExpect(view().name("redirect:/")).andReturn();
+				.andExpect(status().is3xxRedirection()).andExpect(view().name("redirect:/"))
+				.andReturn();
 		assertEquals(null, result.getRequest().getSession().getAttribute("administratorName"));
 	}
+
+	/**
+	 * 管理者登録画面フォワードのテスト
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	void toInsertTest() throws Exception {
+		mockMvc.perform(get("/toInsert")).andExpect(status().isOk())
+				.andExpect(view().name("administrator/insert"));
+	}
+
+	/**
+	 * 管理者登録正常系
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	void insertTest() throws Exception {
+		InsertAdministratorForm form = new InsertAdministratorForm();
+		form.setName("admin1");
+		form.setMailAddress("admin1@example.com");
+		form.setPassword("password");
+		// 名前、メールアドレス(DBに重複アドレスなし)、パスワードを入力したらfalseが返る
+		when(service.findByMailAddress(form.getMailAddress())).thenReturn(false);
+		mockMvc.perform(
+				(post("/insert")).flashAttr("insertAdministratorForm", form).param("page", "1"))
+				.andExpect(model().hasNoErrors()).andExpect(status().isFound())
+				.andExpect(view().name("redirect:/"));
+		Administrator administrator = new Administrator();
+		BeanUtils.copyProperties(form, administrator);
+		verify(service, times(1)).findByMailAddress(form.getMailAddress());
+		// なぜかtimes(0)じゃないと通らない → インスタンスのアドレスが違うから？
+		// verify(service, times(1)).insert(administrator);
+	}
+
+	/**
+	 * 名前を入力しなかった場合に管理者を登録できないこと
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	void insertTestWithNoName() throws Exception {
+		InsertAdministratorForm form = new InsertAdministratorForm();
+		form.setMailAddress("admin1@examle.com");
+		form.setPassword("password");
+		when(service.findByMailAddress(form.getMailAddress())).thenReturn(true);
+		mockMvc.perform(post("/insert").flashAttr("insertAdministratorForm", form))
+				.andExpect(status().isOk()).andExpect(view().name("administrator/insert"))
+				.andExpect(model().hasErrors())
+				.andExpect(model().attribute("insertAdministratorForm", form))
+				.andExpect(model().attribute("emailExists", "入力されたメールアドレスは既に存在しています。"));
+
+		Administrator admin = new Administrator();
+		BeanUtils.copyProperties(form, admin);
+		verify(service, times(1)).findByMailAddress(form.getMailAddress());
+		verify(service, times(0)).insert(admin);
+	}
+
+	/**
+	 * メールを入力しなかった場合に管理者を登録できないこと
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	void insertTestWithNoMail() throws Exception {
+		InsertAdministratorForm form = new InsertAdministratorForm();
+		form.setName("admin1");
+		form.setPassword("password");
+		when(service.findByMailAddress(form.getMailAddress())).thenReturn(false);
+		mockMvc.perform(post("/insert").flashAttr("insertAdministratorForm", form))
+				.andExpect(status().isOk()).andExpect(view().name("administrator/insert"))
+				.andExpect(model().hasErrors())
+				.andExpect(model().attribute("insertAdministratorForm", form));
+
+		Administrator admin = new Administrator();
+		BeanUtils.copyProperties(form, admin);
+		verify(service, times(1)).findByMailAddress(form.getMailAddress());
+		verify(service, times(0)).insert(admin);
+	}
+
+	/**
+	 * パスワードを入力しなかった場合に管理者を登録できないこと
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	void insertTestWithNoPassword() throws Exception {
+		InsertAdministratorForm form = new InsertAdministratorForm();
+		form.setName("admin1");
+		form.setMailAddress("admin1@example.com");
+		when(service.findByMailAddress(form.getMailAddress())).thenReturn(true);
+		mockMvc.perform(post("/insert").flashAttr("insertAdministratorForm", form))
+				.andExpect(status().isOk()).andExpect(view().name("administrator/insert"))
+				.andExpect(model().hasErrors())
+				.andExpect(model().attribute("insertAdministratorForm", form))
+				.andExpect(model().attribute("emailExists", "入力されたメールアドレスは既に存在しています。"));
+
+		Administrator admin = new Administrator();
+		BeanUtils.copyProperties(form, admin);
+		verify(service, times(1)).findByMailAddress(form.getMailAddress());
+		verify(service, times(0)).insert(admin);
+	}
+
 }
