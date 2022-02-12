@@ -49,7 +49,7 @@ public class AdministratorController {
 	 * @param loginForm ユーザ入力ログイン情報
 	 * @return ログインページ
 	 */
-	@RequestMapping("login")
+	@RequestMapping("/login")
 	public String login(LoginForm loginForm, Model model) {
 		Administrator admin = service.findByMailAddressAndPassword(loginForm.getMailAddress(),
 				loginForm.getPassword());
