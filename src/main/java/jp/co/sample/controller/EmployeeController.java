@@ -148,7 +148,14 @@ public class EmployeeController {
 		// 従業員をID検索で1件取得
 		Employee employee = service.showDetail(Integer.valueOf(form.getId()));
 
-		LocalDate hireDate = generateHireDate(model, employee, year, month, date);
+		LocalDate hireDate = null;
+		try {
+			// 入社日オブジェクトを作成
+			hireDate = LocalDate.of(year, month, date);
+		} catch (Exception e) {
+			// ユーザ入力値の保持
+			addEmployeeErrorAttributeToRequestScope(model, employee, year, month, date);
+		}
 
 		addEmployeeAttributeToRequestScope(model, employee, year, month, date);
 		if (result.hasErrors()) {
@@ -170,31 +177,6 @@ public class EmployeeController {
 		return "redirect:/employee/showList";
 	}
 
-
-
-	/**
-	 *
-	 * @param model リクエストスコープ
-	 * @param employee 従業員情報
-	 * @param year 入社年
-	 * @param month 入社月
-	 * @param date 入社日
-	 * @return hireDateの値が正常ならhireDateオブジェクト
-	 * @return hireDateの値が異常ならnull
-	 */
-	public LocalDate generateHireDate(Model model, Employee employee, Integer year, Integer month,
-			Integer date) {
-		LocalDate hireDate = null;
-		try {
-			// 入社日オブジェクトを作成
-			hireDate = LocalDate.of(year, month, date);
-		} catch (Exception e) {
-			// ユーザ入力値の保持
-			addEmployeeErrorAttributeToRequestScope(model, employee, year, month, date);
-			return null;
-		}
-		return hireDate;
-	}
 
 	/**
 	 * hireDateの入力値が正常だった場合にリクエストスコープにデータを格納する
