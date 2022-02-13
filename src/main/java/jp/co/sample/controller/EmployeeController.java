@@ -3,7 +3,6 @@ package jp.co.sample.controller;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,11 +57,11 @@ public class EmployeeController {
 			return "administrator/login";
 		}
 
-		Integer currentPage = Integer.parseInt(page);
-
 		// 初期表示ではパラメータを取得できないので、1ページに設定
-		if (Objects.isNull(currentPage)) {
-			currentPage = 1;
+		Integer currentPage = 1;
+		// ページ番号がリクエストパラメータにあれば上書き
+		if (page != null) {
+			currentPage = Integer.parseInt(page);
 		}
 		// データ取得時の取得件数、取得情報の指定
 		HashMap<String, Integer> search = new HashMap<String, Integer>();
@@ -148,7 +147,14 @@ public class EmployeeController {
 		// 従業員をID検索で1件取得
 		Employee employee = service.showDetail(Integer.valueOf(form.getId()));
 
-		LocalDate hireDate = generateHireDate(model, employee, year, month, date);
+		LocalDate hireDate = null;
+		try {
+			// 入社日オブジェクトを作成
+			hireDate = LocalDate.of(year, month, date);
+		} catch (Exception e) {
+			// ユーザ入力値の保持
+			addEmployeeErrorAttributeToRequestScope(model, employee, year, month, date);
+		}
 
 		addEmployeeAttributeToRequestScope(model, employee, year, month, date);
 		if (result.hasErrors()) {
@@ -170,31 +176,6 @@ public class EmployeeController {
 		return "redirect:/employee/showList";
 	}
 
-
-
-	/**
-	 *
-	 * @param model リクエストスコープ
-	 * @param employee 従業員情報
-	 * @param year 入社年
-	 * @param month 入社月
-	 * @param date 入社日
-	 * @return hireDateの値が正常ならhireDateオブジェクト
-	 * @return hireDateの値が異常ならnull
-	 */
-	public LocalDate generateHireDate(Model model, Employee employee, Integer year, Integer month,
-			Integer date) {
-		LocalDate hireDate = null;
-		try {
-			// 入社日オブジェクトを作成
-			hireDate = LocalDate.of(year, month, date);
-		} catch (Exception e) {
-			// ユーザ入力値の保持
-			addEmployeeErrorAttributeToRequestScope(model, employee, year, month, date);
-			return null;
-		}
-		return hireDate;
-	}
 
 	/**
 	 * hireDateの入力値が正常だった場合にリクエストスコープにデータを格納する
