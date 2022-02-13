@@ -3,7 +3,6 @@ package jp.co.sample.controller;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,11 +57,11 @@ public class EmployeeController {
 			return "administrator/login";
 		}
 
-		Integer currentPage = Integer.parseInt(page);
-
 		// 初期表示ではパラメータを取得できないので、1ページに設定
-		if (Objects.isNull(currentPage)) {
-			currentPage = 1;
+		Integer currentPage = 1;
+		// ページ番号がリクエストパラメータにあれば上書き
+		if (page != null) {
+			currentPage = Integer.parseInt(page);
 		}
 		// データ取得時の取得件数、取得情報の指定
 		HashMap<String, Integer> search = new HashMap<String, Integer>();
