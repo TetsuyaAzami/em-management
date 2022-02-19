@@ -95,7 +95,7 @@ public class AdministratorController {
 		Boolean isEmailExists = service.findByMailAddress(form.getMailAddress());
 
 		if (isEmailExists) {
-			model.addAttribute("emailExists", "入力されたメールアドレスは既に存在しています。");
+			result.rejectValue("mailAddress", "duplicate-email");
 		}
 		if (result.hasErrors() || isEmailExists) {
 			return "administrator/insert";
