@@ -7,42 +7,40 @@ import javax.validation.constraints.Size;
 
 public class UpdateEmployeeForm {
 	/** 従業員ID */
-	@Pattern(regexp = "^[0-9]+$", message = "idは整数値です")
+	@Pattern(regexp = "^[0-9]+$")
 	@NotNull
 	private String id;
 	/** 従業員名 */
-	@NotBlank(message = "名前は必須です")
-	@Size(min = 1, max = 50, message = "名前は50文字以内です")
+	@NotBlank
+	@Size(min = 1, max = 50)
 	private String name;
 	/** 従業員プロフィール画像 */
 	private String image;
 	/** 従業員性別 */
-	@Pattern(regexp = "(男性|女性)", message = "性別は男性または女性です")
-	@NotBlank(message = "性別は必須です")
+	@Pattern(regexp = "(男性|女性)")
+	@NotBlank
 	private String gender;
 	/** 従業員メールアドレス */
-	@Pattern(regexp = "^[a-zA-Z0-9_.+-]+@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\\.)+[a-zA-Z]{2,}$",
-			message = "メールアドレスの形式が不正です")
+	@Pattern(regexp = "^[a-zA-Z0-9_.+-]+@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\\.)+[a-zA-Z]{2,}$")
 	private String mailAddress;
 	/** 従業員郵便番号 */
-	@Pattern(regexp = "[0-9]{3}-[0-9]{4}", message = "郵便番号の形式は〇〇〇-〇〇〇〇にしてください")
+	@Pattern(regexp = "[0-9]{3}-[0-9]{4}")
 	private String zipCode;
 	/** 住所 */
-	@NotBlank(message = "住所は必須です")
+	@NotBlank
 	private String address;
 	/** 電話番号 */
-	@Pattern(regexp = "0\\d{1,4}-\\d{1,4}-\\d{4}", message = "電話番号の形式を満たしていません")
-	@Size(min = 1, max = 20, message = "電話番号は1〜20桁までです")
+	@Pattern(regexp = "0\\d{1,4}-\\d{1,4}-\\d{4}")
+	@Size(min = 1, max = 20)
 	private String telephone;
 	/** 給料 */
-	@Pattern(regexp = "^[0-9]+$", message = "給料は数字で入れてください")
+	@Pattern(regexp = "^[0-9]+$")
 	private String salary;
 	/** 特性 */
-	@Size(min = 0, max = 200, message = "特性は0文字〜200文字までです")
+	@Size(min = 0, max = 200)
 	private String characteristics;
 	/** 扶養人数 */
-	@Pattern(regexp = "^[0-9]+$", message = "扶養人数は整数で入れてください")
-	@Pattern(regexp = "^[0-5]$", message = "扶養人数は5人までです")
+	@Pattern(regexp = "^[0-5]$")
 	private String dependentsCount;
 
 	public String getId() {
