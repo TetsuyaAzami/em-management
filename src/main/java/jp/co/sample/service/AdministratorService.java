@@ -43,10 +43,6 @@ public class AdministratorService {
 	}
 
 	public Boolean findByMailAddress(String email) {
-		if (mapper.findByMailAddress(email) == null) {
-			return false;
-		} else {
-			return true;
-		}
+		return mapper.findByMailAddress(email);
 	}
 }
