@@ -9,3 +9,6 @@ spring:
     encoding: UTF-8
 server:
   port: 8081
+mybatis:
+  configuration:
+    mapUnderscoreToCamelCase: true

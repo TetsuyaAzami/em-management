@@ -76,6 +76,7 @@ public class EmployeeController {
 			// データ一覧を取得
 			employeeList = service.showListWithLimit(search);
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("正常にページが読みこめませんでした");
 			return null;
 		}
@@ -168,6 +169,7 @@ public class EmployeeController {
 		// UpdateEmployeeFormからEmployeeエンティティにデータを詰め直してDBに登録
 		BeanUtils.copyProperties(form, employee);
 		employee.setHireDate(hireDate);
+		employee.setSalary(Integer.parseInt(form.getSalary()));
 		employee.setDependentsCount(Integer.parseInt(form.getDependentsCount()));
 		service.update(employee);
 
