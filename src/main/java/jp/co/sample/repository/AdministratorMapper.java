@@ -5,8 +5,6 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.jdbc.SQL;
 import jp.co.sample.domain.Administrator;
 
 @Mapper
@@ -35,20 +33,6 @@ public interface AdministratorMapper {
 	 *
 	 * @return
 	 */
-	@SelectProvider(type = AdministratorSQLProvider.class, method = "findByMailAddress")
-	Administrator findByMailAddress(String mailAddress);
-
-	/** SQLProvider練習 */
-	public class AdministratorSQLProvider {
-		public String findByMailAddress(@Param("mailAddress") String mailAddress) {
-			return new SQL() {
-				{
-					SELECT("id,name,mail_address,password");
-					FROM("administrators");
-					WHERE("mail_address=#{mailAddress}");
-					LIMIT(1);
-				}
-			}.toString();
-		}
-	}
+	@Select("SELECT COALESCE((SELECT 1 FROM administrators WHERE mail_address = #{mailAddress}),0)")
+	Boolean findByMailAddress(String mailAddress);
 }
