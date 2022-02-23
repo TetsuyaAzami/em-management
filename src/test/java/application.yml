@@ -1,14 +1,12 @@
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/student
+    url: jdbc:postgresql://localhost:5432/studentTest
     username: postgres
     password: postgres
-  messages:
-    basename: Validations
-    encoding: UTF-8
-server:
-  port: 8081
+  sql:
+    init:
+      mode: always
 mybatis:
   configuration:
     mapUnderscoreToCamelCase: true

@@ -1,11 +1,38 @@
-@CHARSET "UTF-8";
-
+@charset "UTF-8";
+.table-height-maintainer {
+  margin-bottom: 20px;
+  min-height: 407px;
+}
+.register-ok-message {
+  margin-bottom: 24px;
+  text-align: center;
+  color: green;
+}
+.hire_date {
+  display: flex;
+}
+.hire_date_form {
+  width: 100px;
+  margin: 0 4px;
+}
 .error-input {
-	border-color: #ff0000;
-	background-color: #ff0000;
-	margin-left: 5px;
+  border-color: #ff0000;
+  background-color: #ff0000;
+  margin-left: 5px;
 }
 
 .error-messages {
-	color: #ff0000;
+  color: #ff0000;
+}
+
+.form-td {
+  display: flex;
+  flex-direction: column;
+}
+.form-td-input {
+  width: 164px;
+}
+.pagination-parent {
+  display: flex;
+  justify-content: center;
 }
